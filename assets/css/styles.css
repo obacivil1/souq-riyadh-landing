@@ -530,10 +530,6 @@ input {
   margin-bottom: 28px;
 }
 
-.form-sub strong {
-  color: var(--danger);
-}
-
 .field {
   border: none;
   margin: 0 0 18px;
@@ -700,26 +696,6 @@ input {
   color: var(--muted);
   font-size: 13px;
   margin: 8px 0 16px;
-}
-
-.pay-methods {
-  margin: 14px 0 0;
-  padding: 11px 14px;
-  background: var(--gold-soft);
-  border: 1px dashed var(--gold);
-  border-radius: var(--radius-sm);
-  font-size: 13.5px;
-  color: var(--ink);
-  text-align: center;
-}
-.pay-methods strong {
-  font-weight: 800;
-}
-.pay-methods .pay-methods-hint {
-  display: block;
-  color: var(--muted);
-  font-size: 12.5px;
-  margin-top: 2px;
 }
 
 .pay-options {
@@ -1394,18 +1370,21 @@ input {
     background: transparent;
     border: none;
     box-shadow: none;
+    overflow: visible;
   }
-  .admin-table,
-  .admin-table tbody,
-  .admin-table tr,
-  .admin-table td {
+  .admin-table {
+    min-width: 0;
+  }
+  .admin-table:not(.stat-table),
+  .admin-table:not(.stat-table) tr,
+  .admin-table:not(.stat-table) td {
     display: block;
     width: 100%;
   }
-  .admin-table thead {
+  .admin-table:not(.stat-table) thead {
     display: none;
   }
-  .admin-table tr {
+  .admin-table:not(.stat-table) tr {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 14px;
@@ -1413,7 +1392,7 @@ input {
     margin-bottom: 12px;
     padding: 10px 14px;
   }
-  .admin-table td {
+  .admin-table:not(.stat-table) td {
     border: none;
     padding: 5px 0;
     display: flex;
@@ -1423,7 +1402,7 @@ input {
     text-align: left;
     font-size: 13.5px;
   }
-  .admin-table td::before {
+  .admin-table:not(.stat-table) td::before {
     content: attr(data-label);
     font-weight: 700;
     color: var(--muted);

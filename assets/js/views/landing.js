@@ -118,7 +118,7 @@ const LandingView = (() => {
         '<div class="container container-narrow">',
           '<div class="card form-card">',
             '<h2 class="section-title form-title">نموذج رسوم النشر</h2>',
-            '<p class="form-sub">نموذج قصير جدًا. <strong>الدفع لا يضمن النشر</strong>، والقبول النهائي خاضع لسياسة الجروب واشتراط عدم مخالفة الإعلان لسياسة النشر على فيسبوك.</p>',
+            '<p class="form-sub">نموذج قصير جدًا، يُملأ في أقل من دقيقة.</p>',
             '<form id="order-form" novalidate>',
               '<div class="field">',
                 '<label for="f-fbName">اسم حسابك في فيسبوك <span class="req">*</span></label>',
@@ -166,9 +166,6 @@ const LandingView = (() => {
                   '</div>',
                   '<button type="submit" class="pay-opt pay-opt-card" title="الدفع ببطاقة السحب أو الائتمان">' + ICON_CARD + '<span>Debit or Credit Card</span></button>',
                 '</div>',
-                '<div class="pay-methods">يقبل الدفع عبر: ' +
-                  cfg.paypal.methods.map((m) => '<strong>' + RAU.esc(m) + '</strong>').join(' · ') +
-                  '<span class="pay-methods-hint">' + RAU.esc(cfg.paypal.methodHint) + '</span></div>',
                 '<div class="pay-container" id="pay-container" hidden></div>',
                 '<p class="pay-disclaimer">النموذج ليس قناة مراسلة؛ تُستخدم بياناتك فقط لإتمام مراجعة إعلانك.</p>',
               '</div>',

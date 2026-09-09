@@ -722,6 +722,43 @@ input {
   margin-top: 2px;
 }
 
+.pay-brands {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+.brand-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  height: 34px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+.chip-paypal {
+  color: #003087;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 17px;
+  letter-spacing: -0.5px;
+}
+.chip-visa {
+  color: #1A1F71;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: -0.5px;
+}
+.chip-mc {
+  display: inline-flex;
+  line-height: 0;
+}
+
 .pay-disclaimer {
   color: var(--muted);
   font-size: 13px;

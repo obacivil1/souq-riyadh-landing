@@ -107,7 +107,7 @@ const AdminView = (() => {
             '<button type="button" class="filter-btn" data-filter="refunded">مسترد</button>',
           '</div>',
         '</div>',
-        '<p class="admin-hint">طريقة المطابقة: قارن اسم فيسبوك أو عنوان الإعلان مع عملية الدفع في حساب PayPal قبل النشر. المسترد <span id="hint-refunded">0</span> · الزيارات تُحتسب على متصفح هذا الجهاز محليًا.</p>',
+        '<p class="admin-hint">طريقة المطابقة: قارن اسم فيسبوك أو عنوان الإعلان مع عملية الدفع في حساب PayPal قبل النشر. المسترد <span id="hint-refunded">0</span> · الزيارات الحقيقية من كل الزوار متاحة في حساب GoatCounter (souq-riyadh)، وهذا العداد المحلي يسجّل الصفحات التي تُفتح على هذا المتصفح.</p>',
         '<div class="card admin-table-card">',
           '<div class="admin-table-scroll">',
             '<table class="admin-table">',

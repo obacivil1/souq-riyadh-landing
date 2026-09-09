@@ -241,7 +241,17 @@ const LandingView = (() => {
   async function handleSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
-    if (!validate(form)) return;
+    if (!validate(form)) {
+      const bad = form.querySelector('.field-error:not(:empty)');
+      const target = bad ? bad.closest('.field') : (document.getElementById('form') || form);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (bad) {
+        const inp = bad.closest('.field').querySelector('input');
+        if (inp) inp.focus({ preventScroll: true });
+      }
+      RAU.toast('أكمل الحقول الناقصة — المطلوبة محددة بالأحمر.', 'warning');
+      return;
+    }
 
     const pkg = cfg.packages.find((p) => p.id === form.querySelector('input[name="pkg"]:checked').value);
     const reference = RiyadhRef.generate();

@@ -588,6 +588,7 @@ input {
   min-height: 18px;
   margin-top: 6px;
 }
+.field:has(.field-error:not(:empty)) input { border-color: var(--danger); }
 
 .field-hint {
   color: var(--muted);

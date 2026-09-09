@@ -49,7 +49,7 @@ const AdminView = (() => {
           '<form id="gate-form" novalidate>',
             '<div class="field">',
               '<label for="gate-passcode">رمز الدخول</label>',
-              '<input id="gate-passcode" name="passcode" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" dir="ltr" required>',
+              '<input id="gate-passcode" name="passcode" type="password" autocomplete="off" placeholder="••••••" dir="ltr" required>',
               '<p class="field-error" id="gate-error"></p>',
             '</div>',
             '<button type="submit" class="btn btn-primary btn-block">دخول</button>',

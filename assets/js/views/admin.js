@@ -271,6 +271,8 @@ const AdminView = (() => {
           '<div><span class="stat-value">' + (gcEl ? (gcEl.textContent || '—') : '—') + '</span><span class="stat-label">زوار فعليون</span></div>' +
         '</div>' +
         '<p class="modal-note">تفاصيل الزيارات الحقيقية من كل الزوار (جوال أو كمبيوتر، الدولة والمدينة، الصفحات، الأيام والساعات) متاحة في لوحة GoatCounter.</p>' +
+        '<p class="modal-note">لكي لا تُحسب زيارتك أنت ضمن الأرقام: من ' +
+          '<a href="https://' + (cfg.analytics.goatCounterSite || '') + '.goatcounter.com/settings" target="_blank" rel="noopener">إعدادات GoatCounter</a> ← <strong>Tracking</strong> ← أضف عنوان IP الخاص بك في <strong>Ignore IPs</strong> (يوجد زر لإضافة عنوانك الحالي تلقائياً).</p>' +
         gcLink +
         '<button type="button" class="btn btn-ghost btn-block" data-modal-close>إغلاق</button>';
       modalShow(container);
@@ -335,7 +337,10 @@ const AdminView = (() => {
       const data = await res.json();
       const stats = data.stats || [];
       if (!stats.length) {
-        body.innerHTML = '<p class="modal-note">لا توجد زيارات قابلة للتجميع بعد.</p>' + back + closeBtn;
+        const settingsLink = '<a href="https://' + site + '.goatcounter.com/settings" target="_blank" rel="noopener">الإعدادات</a>';
+        body.innerHTML = scope === 'city'
+          ? '<p class="modal-note">لا تظهر مدن إضافية حالياً. لمطالعة المدن فعّل خيار <strong>«City-level location»</strong> من ' + settingsLink + ' في GoatCounter — وتُعرض المدن للزيارات الجديدة بعد التفعيل.</p>' + back + closeBtn
+          : '<p class="modal-note">لا توجد زيارات قابلة للتجميع بعد.</p>' + back + closeBtn;
         return;
       }
       const rows = stats.map((s) => {

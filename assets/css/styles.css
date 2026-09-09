@@ -1391,6 +1391,9 @@ input {
   }
   .admin-table-card {
     padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
   .admin-table,
   .admin-table tbody,
@@ -1403,26 +1406,47 @@ input {
     display: none;
   }
   .admin-table tr {
-    border-bottom: 1px solid var(--line);
-    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 12px;
+    padding: 10px 14px;
   }
   .admin-table td {
     border: none;
-    padding: 7px 0;
+    padding: 5px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     text-align: left;
+    font-size: 13.5px;
   }
   .admin-table td::before {
     content: attr(data-label);
     font-weight: 700;
     color: var(--muted);
     font-size: 12.5px;
+    flex-shrink: 0;
   }
   .row-actions {
-    justify-content: flex-start;
+    margin-top: 8px;
+    border-top: 1px dashed var(--line);
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    justify-content: stretch;
+  }
+  .row-actions .btn {
+    width: 100%;
+    padding: 9px 4px;
+    font-size: 13px;
+  }
+  .row-actions .link-btn {
+    grid-column: 1 / -1;
+    text-align: center;
   }
 }
 

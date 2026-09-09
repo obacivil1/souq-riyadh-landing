@@ -97,6 +97,7 @@ const AdminView = (() => {
           '<button type="button" class="stat-card stat-btn" data-stat="visits"><span class="stat-value" id="stat-visits">0</span><span class="stat-label">زيارات الصفحة</span></button>',
           '<button type="button" class="stat-card stat-btn" data-stat="unique"><span class="stat-value" id="stat-unique">0</span><span class="stat-label">زوار فريدون</span></button>',
           '<button type="button" class="stat-card stat-btn" data-stat="gc"><span class="stat-value" id="stat-gc">…</span><span class="stat-label">الزوار الفعليون (GoatCounter)</span></button>',
+          '<button type="button" class="stat-card stat-btn" data-stat="locations"><span class="stat-value">🌍</span><span class="stat-label">الدول والمدن</span></button>',
         '</div>',
         '<div class="admin-tools">',
           '<input type="search" id="admin-search" class="admin-search" placeholder="ابحث باسم فيسبوك أو عنوان الإعلان أو المرجع…">',
@@ -247,6 +248,14 @@ const AdminView = (() => {
       return;
     }
 
+    if (kind === 'locations') {
+      title.textContent = 'الدول والمدن';
+      body.innerHTML = '<p class="modal-note">جارٍ التحميل…</p><button type="button" class="btn btn-ghost btn-block" data-modal-close>إغلاق</button>';
+      modalShow(container);
+      loadLocations(container, body, 'country');
+      return;
+    }
+
     if (kind === 'visits' || kind === 'unique' || kind === 'gc') {
       const visits = SooqVisits.read() || { total: 0, unique: 0 };
       const gcEl = container.querySelector('#stat-gc');
@@ -306,6 +315,48 @@ const AdminView = (() => {
       if (e.target === modal || e.target === closeBtn || btn) modal.hidden = true;
     };
     modal.addEventListener('click', onModalClose);
+  }
+
+  async function loadLocations(container, body, scope, id) {
+    const site = cfg.analytics.goatCounterSite;
+    const token = cfg.analytics.goatCounterToken;
+    const back = scope === 'city' ? '<button type="button" class="btn btn-ghost btn-block" data-back-countries>العودة للدول</button>' : '';
+    const closeBtn = '<button type="button" class="btn btn-ghost btn-block" data-modal-close>إغلاق</button>';
+
+    if (!token) {
+      body.innerHTML = '<p class="modal-note">لتفعيل الدول والمدن: من لوحة GoatCounter (القائمة العلوية ← اسمك ← <strong>API</strong>) أنشئ رمزاً واملأ الحقل <code>analytics.goatCounterToken</code> في config.js. أرسل لي الرمز وأنا أدرجه لك.</p>' + back + closeBtn;
+      return;
+    }
+
+    const base = 'https://' + site + '.goatcounter.com/api/v0/stats/locations' + (scope === 'city' ? '/' + encodeURIComponent(id) : '') + '?limit=100';
+    try {
+      const res = await fetch(base, { headers: { Authorization: 'Bearer ' + token } });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = await res.json();
+      const stats = data.stats || [];
+      if (!stats.length) {
+        body.innerHTML = '<p class="modal-note">لا توجد زيارات قابلة للتجميع بعد.</p>' + back + closeBtn;
+        return;
+      }
+      const rows = stats.map((s) => {
+        if (scope === 'city') {
+          return '<tr><td>' + RAU.esc(s.name) + '</td><td>' + s.count + '</td></tr>';
+        }
+        return '<tr class="loc-row" data-loc-id="' + RAU.esc(s.id) + '"><td>' + RAU.esc(s.name) + '</td><td>' + s.count + '</td></tr>';
+      }).join('');
+      body.innerHTML =
+        '<div class="admin-table-scroll"><table class="admin-table stat-table">' +
+          '<thead><tr><th>' + (scope === 'city' ? 'المدينة' : 'الدولة') + '</th><th>الزيارات</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody></table></div>' +
+        back + closeBtn;
+      body.querySelectorAll('.loc-row').forEach((row) => row.addEventListener('click', (e) => {
+        loadLocations(container, body, 'city', e.currentTarget.dataset.locId);
+      }));
+      const bk = body.querySelector('[data-back-countries]');
+      if (bk) bk.addEventListener('click', () => loadLocations(container, body, 'country'));
+    } catch (err) {
+      body.innerHTML = '<p class="modal-note">تعذّر تحميل الدول والمدن (تحقق من رمز API في الإعدادات).</p>' + back + closeBtn;
+    }
   }
 
   function renderTable(container) {

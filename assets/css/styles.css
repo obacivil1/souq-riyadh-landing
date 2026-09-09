@@ -1366,6 +1366,9 @@ mark {
   padding: 16px;
   z-index: 1000;
 }
+.modal-backdrop[hidden] {
+  display: none;
+}
 .modal-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1437,6 +1440,12 @@ mark {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+.loc-row {
+  cursor: pointer;
+}
+.loc-row:hover {
+  background: var(--soft);
 }
 
 @media (max-width: 620px) {

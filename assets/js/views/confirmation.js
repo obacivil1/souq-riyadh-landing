@@ -7,7 +7,7 @@ const ConfirmationView = (() => {
     if (!terms.length) return safe;
     const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const re = new RegExp(terms.map(escapeRe).join('|'), 'g');
-    return safe.replace(re, (m) => '<mark>' + m + '</mark>');
+    return safe.replace(re, (m) => '<strong>' + m + '</strong>');
   }
 
   function successTemplate(order) {

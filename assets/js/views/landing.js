@@ -27,7 +27,7 @@ const LandingView = (() => {
     if (!terms.length) return safe;
     const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const re = new RegExp(terms.map(escapeRe).join('|'), 'g');
-    return safe.replace(re, (m) => '<mark>' + m + '</mark>');
+    return safe.replace(re, (m) => '<strong>' + m + '</strong>');
   }
 
   function template() {
@@ -42,6 +42,7 @@ const LandingView = (() => {
               '<p class="hero-sub">أكمل رسوم نشر إعلانك عبر صفحة رسمية آمنة. نموذج قصير، دفع فوري عبر ' + RAU.esc(cfg.paypal.badge) + '، ومراجعة خلال <strong>' + cfg.policy.reviewHours + ' ساعة</strong>.</p>',
               '<div class="hero-badges">',
                 '<span class="badge">دفع آمن عبر ' + RAU.esc(cfg.paypal.badge) + '</span>',
+                '<span class="badge">بطاقة السحب أو الائتمان</span>',
                 '<span class="badge">خصوصية كاملة</span>',
                 '<span class="badge">نظام رسمي موحّد</span>',
               '</div>',
@@ -154,6 +155,9 @@ const LandingView = (() => {
                 '<p class="pay-note">' + RAU.esc(cfg.paypal.currencyNote) + '</p>',
                 '<button type="submit" class="btn btn-pay btn-lg btn-block" id="submit-btn">' +
                   'المتابعة إلى الدفع عبر ' + RAU.esc(cfg.paypal.badge) + '</button>',
+                '<div class="pay-methods">يقبل الدفع عبر: ' +
+                  cfg.paypal.methods.map((m) => '<strong>' + RAU.esc(m) + '</strong>').join(' · ') +
+                  '<span class="pay-methods-hint">' + RAU.esc(cfg.paypal.methodHint) + '</span></div>',
                 '<div class="pay-container" id="pay-container" hidden></div>',
                 '<p class="pay-disclaimer">النموذج ليس قناة مراسلة؛ تُستخدم بياناتك فقط لإتمام مراجعة إعلانك.</p>',
               '</div>',

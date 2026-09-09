@@ -96,6 +96,7 @@ const AdminView = (() => {
           '<div class="stat-card"><span class="stat-value" id="stat-revenue">0</span><span class="stat-label">الإيراد (ر.س)</span></div>',
           '<div class="stat-card"><span class="stat-value" id="stat-visits">0</span><span class="stat-label">زيارات الصفحة</span></div>',
           '<div class="stat-card"><span class="stat-value" id="stat-unique">0</span><span class="stat-label">زوار فريدون</span></div>',
+          '<div class="stat-card"><span class="stat-value" id="stat-gc">…</span><span class="stat-label">الزوار الفعليون (GoatCounter)</span></div>',
         '</div>',
         '<div class="admin-tools">',
           '<input type="search" id="admin-search" class="admin-search" placeholder="ابحث باسم فيسبوك أو عنوان الإعلان أو المرجع…">',
@@ -181,6 +182,17 @@ const AdminView = (() => {
     return SooqOrders.search(state.query, state.filter);
   }
 
+  function loadGoatCounter(container) {
+    const site = window.RIYADH_CONFIG.analytics.goatCounterSite;
+    if (!site || loadGoatCounter.loaded) return;
+    loadGoatCounter.loaded = true;
+    const el = container.querySelector('#stat-gc');
+    fetch('https://' + site + '.goatcounter.com/counter/%2F.json')
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data) => { el.textContent = data.count || '0'; })
+      .catch(() => { el.textContent = '—'; });
+  }
+
   function renderTable(container) {
     const rows = filteredList();
     const tbody = container.querySelector('#admin-tbody');
@@ -195,6 +207,7 @@ const AdminView = (() => {
     container.querySelector('#stat-visits').textContent = visits.total;
     container.querySelector('#stat-unique').textContent = visits.unique;
     container.querySelector('#hint-refunded').textContent = stats.refunded;
+    loadGoatCounter(container);
 
     if (!rows.length) {
       tbody.innerHTML = '';

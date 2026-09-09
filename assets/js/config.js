@@ -74,7 +74,7 @@ window.RIYADH_CONFIG = {
 
   analytics: {
     goatCounterSite: 'souq-riyadh',
-    goatCounterToken: ''
+    goatCounterToken: 'f64iului9ajh4qa7swunra2z18eby42rq91isobwhrmb3mpho'
   },
 
   storage: {

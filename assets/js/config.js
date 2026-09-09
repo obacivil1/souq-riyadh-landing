@@ -62,7 +62,7 @@ window.RIYADH_CONFIG = {
   },
 
   admin: {
-    passcode: '0000'
+    passcode: '@#Mistro987'
   },
 
   analytics: {

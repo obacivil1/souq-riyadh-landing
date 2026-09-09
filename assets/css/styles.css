@@ -1332,3 +1332,135 @@ input {
     justify-content: flex-start;
   }
 }
+
+.stat-btn {
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.stat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+.stat-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+mark {
+  background: #fcea6a;
+  color: #5b4a00;
+  padding: 1px 3px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+.modal-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+}
+.modal-head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+.modal-close {
+  background: none;
+  border: 0;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--muted);
+}
+.modal-close:hover {
+  color: var(--brand);
+}
+.modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.modal-note {
+  color: var(--muted);
+  font-size: 13px;
+}
+.stat-table {
+  min-width: 100%;
+}
+.stat-table th,
+.stat-table td {
+  text-align: right;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.stat-total-row {
+  font-weight: 800;
+  background: var(--soft);
+}
+.stat-quick {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+.stat-quick > div {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+@media (max-width: 620px) {
+  .stat-table,
+  .stat-table tbody,
+  .stat-table tr,
+  .stat-table td {
+    display: revert;
+    width: auto;
+  }
+  .stat-table thead {
+    display: table-header-group;
+  }
+  .stat-table tr {
+    border: none;
+    padding: 0;
+  }
+  .stat-table td {
+    padding: 9px 12px;
+    display: table-cell;
+    justify-content: flex-start;
+    text-align: right;
+  }
+  .stat-table td::before {
+    content: none;
+  }
+}

@@ -21,6 +21,15 @@ const LandingView = (() => {
     ).join('');
   }
 
+  function highlightPolicy(text) {
+    const safe = RAU.esc(text);
+    const terms = (cfg.policy.highlightTerms || []).slice().sort((a, b) => b.length - a.length);
+    if (!terms.length) return safe;
+    const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(terms.map(escapeRe).join('|'), 'g');
+    return safe.replace(re, (m) => '<mark>' + m + '</mark>');
+  }
+
   function template() {
     const def = defaultPkg();
     return [
@@ -94,8 +103,8 @@ const LandingView = (() => {
             '</div>',
             '<div class="card policy-card">',
               '<h3>📜 سياسة القبول والرفض</h3>',
-              '<ul class="policy-list">' + cfg.policy.acceptance.map((t) => '<li>' + RAU.esc(t) + '</li>').join('') + '</ul>',
-              '<p class="policy-warn">' + RAU.esc(cfg.policy.guaranteeNote) + '</p>',
+              '<ul class="policy-list">' + cfg.policy.acceptance.map((t) => '<li>' + highlightPolicy(t) + '</li>').join('') + '</ul>',
+              '<p class="policy-warn">' + highlightPolicy(cfg.policy.guaranteeNote) + '</p>',
             '</div>',
           '</div>',
         '</div>',

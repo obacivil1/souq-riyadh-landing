@@ -90,13 +90,13 @@ const AdminView = (() => {
           '</div>',
         '</div>',
         '<div class="admin-stats">',
-          '<div class="stat-card"><span class="stat-value" id="stat-total">0</span><span class="stat-label">عدد الطلبات</span></div>',
-          '<div class="stat-card"><span class="stat-value" id="stat-submitted">0</span><span class="stat-label">قيد المراجعة</span></div>',
-          '<div class="stat-card"><span class="stat-value" id="stat-approved">0</span><span class="stat-label">موافق عليها</span></div>',
-          '<div class="stat-card"><span class="stat-value" id="stat-revenue">0</span><span class="stat-label">الإيراد (ر.س)</span></div>',
-          '<div class="stat-card"><span class="stat-value" id="stat-visits">0</span><span class="stat-label">زيارات الصفحة</span></div>',
-          '<div class="stat-card"><span class="stat-value" id="stat-unique">0</span><span class="stat-label">زوار فريدون</span></div>',
-          '<div class="stat-card"><span class="stat-value" id="stat-gc">…</span><span class="stat-label">الزوار الفعليون (GoatCounter)</span></div>',
+          '<button type="button" class="stat-card stat-btn" data-stat="total"><span class="stat-value" id="stat-total">0</span><span class="stat-label">عدد الطلبات</span></button>',
+          '<button type="button" class="stat-card stat-btn" data-stat="submitted"><span class="stat-value" id="stat-submitted">0</span><span class="stat-label">قيد المراجعة</span></button>',
+          '<button type="button" class="stat-card stat-btn" data-stat="approved"><span class="stat-value" id="stat-approved">0</span><span class="stat-label">موافق عليها</span></button>',
+          '<button type="button" class="stat-card stat-btn" data-stat="revenue"><span class="stat-value" id="stat-revenue">0</span><span class="stat-label">الإيراد (ر.س)</span></button>',
+          '<button type="button" class="stat-card stat-btn" data-stat="visits"><span class="stat-value" id="stat-visits">0</span><span class="stat-label">زيارات الصفحة</span></button>',
+          '<button type="button" class="stat-card stat-btn" data-stat="unique"><span class="stat-value" id="stat-unique">0</span><span class="stat-label">زوار فريدون</span></button>',
+          '<button type="button" class="stat-card stat-btn" data-stat="gc"><span class="stat-value" id="stat-gc">…</span><span class="stat-label">الزوار الفعليون (GoatCounter)</span></button>',
         '</div>',
         '<div class="admin-tools">',
           '<input type="search" id="admin-search" class="admin-search" placeholder="ابحث باسم فيسبوك أو عنوان الإعلان أو المرجع…">',
@@ -119,6 +119,12 @@ const AdminView = (() => {
             '</table>',
           '</div>',
           '<p class="admin-empty" id="admin-empty" hidden>لا توجد طلبات مطابقة.</p>',
+        '</div>',
+        '<div class="modal-backdrop" id="stat-modal" hidden>',
+          '<div class="modal-card" role="dialog" aria-modal="true">',
+            '<div class="modal-head"><h3 id="stat-modal-title">التفاصيل</h3><button type="button" class="modal-close" id="stat-modal-close" aria-label="إغلاق">×</button></div>',
+            '<div class="modal-body" id="stat-modal-body"></div>',
+          '</div>',
         '</div>',
       '</div>'
     ].join('');
@@ -152,6 +158,21 @@ const AdminView = (() => {
     container.querySelector('#lock-btn').addEventListener('click', () => {
       setUnlocked(false);
       render(container, {});
+    });
+
+    container.querySelectorAll('.stat-btn').forEach((btn) => {
+      btn.addEventListener('click', () => openStat(container, btn.dataset.stat));
+    });
+
+    const modal = container.querySelector('#stat-modal');
+    function closeModal() {
+      modal.hidden = true;
+    }
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target === modal.querySelector('#stat-modal-close')) closeModal();
+    });
+    document.addEventListener('keydown', function escClose(e) {
+      if (e.key === 'Escape' && !modal.hidden) closeModal();
     });
 
     const tbody = container.querySelector('#admin-tbody');
@@ -191,6 +212,100 @@ const AdminView = (() => {
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((data) => { el.textContent = data.count || '0'; })
       .catch(() => { el.textContent = '—'; });
+  }
+
+  function openStat(container, kind) {
+    const orders = SooqOrders.list();
+    const stats = SooqOrders.totals(orders);
+    const sums = {};
+    ['submitted', 'approved', 'rejected', 'refunded', 'total'].forEach((k) => {
+      const items = k === 'total' ? orders : orders.filter((o) => o.adminStatus === k);
+      sums[k] = items.reduce((s, o) => s + Number(o.package.priceSar), 0);
+    });
+    const usd = (sar) => (Number(sar) / 3.75).toFixed(2);
+    const title = container.querySelector('#stat-modal-title');
+    const body = container.querySelector('#stat-modal-body');
+    const close = () => { container.querySelector('#stat-modal').hidden = true; };
+
+    if (kind === 'revenue') {
+      const paid = orders.filter((o) => o.paypal.status === 'COMPLETED');
+      const group = (id) => paid.filter((o) => o.package.id === id);
+      const rows = [
+        ['إعلان فردي', group('single').length, group('single').reduce((s, o) => s + Number(o.package.priceSar), 0)],
+        ['إعلان تجاري', group('business').length, group('business').reduce((s, o) => s + Number(o.package.priceSar), 0)]
+      ];
+      title.textContent = 'تفاصيل الإيراد';
+      body.innerHTML =
+        '<p class="modal-note">الإيراد يُحتسب من الطلبات المنفَّذة للدفع فقط (PayPal مكتمل).</p>' +
+        '<table class="admin-table stat-table">' +
+          '<thead><tr><th>الباقة</th><th>عدد</th><th>ر.س</th><th>≈ USD</th></tr></thead><tbody>' +
+          rows.map((r) => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + usd(r[2]) + '</td></tr>').join('') +
+          '<tr class="stat-total-row"><td>الإجمالي</td><td>' + paid.length + '</td><td>' + stats.revenue + '</td><td>' + usd(stats.revenue) + '</td></tr>' +
+          '</tbody></table>' +
+        '<p class="modal-note">إجمالي كل الباقات (شامل غير المدفوع): ' + sums.total + ' ر.س.</p>';
+      modalShow(container);
+      return;
+    }
+
+    if (kind === 'visits' || kind === 'unique' || kind === 'gc') {
+      const visits = SooqVisits.read() || { total: 0, unique: 0 };
+      const gcEl = container.querySelector('#stat-gc');
+      const site = cfg.analytics.goatCounterSite;
+      const gcLink = site
+        ? '<a class="btn btn-primary btn-block" href="https://' + site + '.goatcounter.com/" target="_blank" rel="noopener">فتح لوحة التحليلات في GoatCounter</a>'
+        : '';
+      title.textContent = 'الزيارات';
+      body.innerHTML =
+        '<div class="stat-quick">' +
+          '<div><span class="stat-value">' + visits.total + '</span><span class="stat-label">على هذا المتصفح</span></div>' +
+          '<div><span class="stat-value">' + visits.unique + '</span><span class="stat-label">زوار فريدون محليًا</span></div>' +
+          '<div><span class="stat-value">' + (gcEl ? (gcEl.textContent || '—') : '—') + '</span><span class="stat-label">زوار فعليون</span></div>' +
+        '</div>' +
+        '<p class="modal-note">تفاصيل الزيارات الحقيقية من كل الزوار (جوال أو كمبيوتر، الدولة والمدينة، الصفحات، الأيام والساعات) متاحة في لوحة GoatCounter.</p>' +
+        gcLink +
+        '<button type="button" class="btn btn-ghost btn-block" data-modal-close>إغلاق</button>';
+      modalShow(container);
+      return;
+    }
+
+    const statusRows = [
+      ['submitted', 'قيد المراجعة', stats.submitted, sums.submitted],
+      ['approved', 'موافق عليها', stats.approved, sums.approved],
+      ['rejected', 'مرفوضة', stats.rejected, sums.rejected],
+      ['refunded', 'مستردة', stats.refunded, sums.refunded]
+    ];
+    const active = (kind === 'total') ? 'الكل' : STATUS_LABEL[kind];
+    title.textContent = 'تفاصيل — ' + active;
+    body.innerHTML =
+      '<table class="admin-table stat-table">' +
+        '<thead><tr><th>الحالة</th><th>عدد</th><th>ر.س</th></tr></thead><tbody>' +
+        statusRows.map((r) =>
+          '<tr' + (r[0] === kind || (kind === 'total' && r[0] === 'total') ? '' : '') + '>' +
+            '<td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td></tr>').join('') +
+        '<tr class="stat-total-row"><td>العدد الكلي</td><td>' + stats.total + '</td><td>' + sums.total + '</td></tr>' +
+        '</tbody></table>' +
+        '<button type="button" class="btn btn-primary btn-block" data-apply-filter="' + kind + '">عرض هذه الطلبات في الجدول</button>' +
+        '<button type="button" class="btn btn-ghost btn-block" data-modal-close>إغلاق</button>';
+    modalShow(container);
+
+    body.querySelector('[data-apply-filter]').addEventListener('click', (e) => {
+      const filter = e.currentTarget.dataset.applyFilter === 'total' ? '' : e.currentTarget.dataset.applyFilter;
+      state.filter = filter;
+      container.querySelectorAll('.filter-btn').forEach((b) => b.classList.toggle('is-active', b.dataset.filter === filter));
+      renderTable(container);
+      close();
+    });
+  }
+
+  function modalShow(container) {
+    const modal = container.querySelector('#stat-modal');
+    modal.hidden = false;
+    const closeBtn = modal.querySelector('.modal-close');
+    const onModalClose = (e) => {
+      const btn = e.target.closest('[data-modal-close]');
+      if (e.target === modal || e.target === closeBtn || btn) modal.hidden = true;
+    };
+    modal.addEventListener('click', onModalClose);
   }
 
   function renderTable(container) {

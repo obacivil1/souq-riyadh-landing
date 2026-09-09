@@ -1,6 +1,15 @@
 const ConfirmationView = (() => {
   const cfg = window.RIYADH_CONFIG;
 
+  function highlightPolicy(text) {
+    const safe = RAU.esc(text);
+    const terms = (cfg.policy.highlightTerms || []).slice().sort((a, b) => b.length - a.length);
+    if (!terms.length) return safe;
+    const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(terms.map(escapeRe).join('|'), 'g');
+    return safe.replace(re, (m) => '<mark>' + m + '</mark>');
+  }
+
   function successTemplate(order) {
     const done = order.paypal.status === 'COMPLETED';
     return [
@@ -19,8 +28,8 @@ const ConfirmationView = (() => {
             '<div class="summary-row"><span>التاريخ</span><strong>' + RAU.fmtDate(order.createdAt) + '</strong></div>',
             '<div class="summary-row"><span>حالة الدفع</span><strong class="' + (done ? 'status-completed' : 'status-pending') + '">' + (done ? 'مكتمل' : 'منتظر التحقق') + '</strong></div>',
           '</div>',
-          '<div class="confirm-note">' + RAU.esc(cfg.policy.guaranteeNote) + '</div>',
-          '<div class="confirm-note refund">' + RAU.esc(cfg.policy.refundNote) + '</div>',
+          '<div class="confirm-note">' + highlightPolicy(cfg.policy.guaranteeNote) + '</div>',
+          '<div class="confirm-note refund"><strong>ملاحظة:</strong> ' + highlightPolicy(cfg.policy.refundNote) + '</div>',
         '</div>',
         '<div class="card confirm-next">',
           '<h2>ماذا يحدث بعدها؟</h2>',

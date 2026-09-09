@@ -722,52 +722,67 @@ input {
   margin-top: 2px;
 }
 
-.pay-brands {
+.pay-options {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   gap: 10px;
-  margin: 16px 0 0;
+  margin-top: 16px;
 }
-.brand-chip {
+.pay-options-row {
+  display: flex;
+  gap: 10px;
+}
+.pay-opt {
+  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 58px;
-  height: 34px;
-  padding: 0 12px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
-.chip-paypal {
+.pay-opt-paypal {
+  background: #fff;
+  border: 1.5px solid #d8dade;
   color: #003087;
   font-weight: 800;
   font-style: italic;
+  font-size: 16.5px;
+  line-height: 1;
+}
+.pay-opt-paypal:hover {
+  border-color: #003087;
+  box-shadow: 0 2px 10px rgba(0, 48, 135, 0.18);
+}
+.pay-opt-apple {
+  background: #000;
+  border: 1px solid #000;
+  color: #fff;
+  font-weight: 600;
   font-size: 17px;
-  letter-spacing: -0.5px;
+  letter-spacing: 0.3px;
+  line-height: 1;
 }
-.chip-visa {
-  color: #1A1F71;
-  font-weight: 900;
-  font-style: italic;
-  font-size: 16px;
-  letter-spacing: -0.5px;
+.pay-opt-apple:hover {
+  background: #1c1c1e;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
-.chip-mc {
-  display: inline-flex;
-  line-height: 0;
+.pay-opt-card {
+  width: 100%;
+  background: #fff;
+  border: 1.5px dashed #b8bec7;
+  color: #5f6368;
+  font-weight: 700;
+  font-size: 14.5px;
+  line-height: 1;
 }
-
-.btn-card {
-  margin-top: 8px;
-  background: var(--surface);
-  color: var(--ink);
-  border: 2px solid var(--brand);
-  font-weight: 800;
-}
-.btn-card:hover {
-  background: var(--brand-soft);
+.pay-opt-card:hover {
+  border-color: #003087;
+  color: #003087;
 }
 
 .pay-disclaimer {

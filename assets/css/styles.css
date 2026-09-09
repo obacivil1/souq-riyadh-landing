@@ -759,6 +759,17 @@ input {
   line-height: 0;
 }
 
+.btn-card {
+  margin-top: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--brand);
+  font-weight: 800;
+}
+.btn-card:hover {
+  background: var(--brand-soft);
+}
+
 .pay-disclaimer {
   color: var(--muted);
   font-size: 13px;

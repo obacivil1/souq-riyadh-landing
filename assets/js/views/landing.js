@@ -155,6 +155,7 @@ const LandingView = (() => {
                 '<p class="pay-note">' + RAU.esc(cfg.paypal.currencyNote) + '</p>',
                 '<button type="submit" class="btn btn-pay btn-lg btn-block" id="submit-btn">' +
                   'المتابعة إلى الدفع عبر ' + RAU.esc(cfg.paypal.badge) + '</button>',
+                '<button type="submit" class="btn btn-card btn-lg btn-block">الدفع ببطاقة السحب أو الائتمان (Visa / Mastercard)</button>',
                 '<div class="pay-brands">',
                   '<span class="brand-chip" title="PayPal"><span class="chip-paypal">PayPal</span></span>',
                   '<span class="brand-chip" title="Visa"><span class="chip-visa">VISA</span></span>',

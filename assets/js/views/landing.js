@@ -56,7 +56,7 @@ const LandingView = (() => {
               '<div class="hero-card-total">' + def.priceSar + '<span class="hero-card-cur"> ' + RAU.esc(cfg.currency.label) + '</span></div>',
               '<p class="hero-card-note">تبدأ باقات نشر الإعلان من</p>',
               '<div class="hero-card-items">',
-                '<div class="hero-card-item"><span>دفع عبر PayPal</span><span>آمن ومشفّر</span></div>',
+                '<div class="hero-card-item"><span>دفع عبر PayPal · Apple Pay · البطاقات</span><span>آمن ومشفّر</span></div>',
                 '<div class="hero-card-item"><span>مراجعة الطلب</span><span>خلال ' + cfg.policy.reviewHours + ' ساعة</span></div>',
                 '<div class="hero-card-item"><span>إجراء واحد</span><span>بسيط وواضح</span></div>',
               '</div>',
